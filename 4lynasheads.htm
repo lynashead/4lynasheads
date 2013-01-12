@@ -1,0 +1,415 @@
+<html>
+<head>
+<script type="text/javascript" src="jquery-1.8.3.min.js"></script> 
+<style type="text/css">
+table {
+  border-width: 1px;
+  border-spacing: ;
+  border-style: groove;
+  border-color: gray;
+  border-collapse: separate;
+  background-color: white;
+text-align:center;
+font-size:10pt;
+font-family:Arial;
+}
+th {
+  border-width: 1px;
+  padding: 3px;
+  border-style: inset;
+  border-color: gray;
+  background-color: #488ac7;
+color: white;
+  -moz-border-radius: ;
+}
+
+th.reo { background-color: #ffffff; }
+
+td {
+  border-width: 1px;
+  padding: 3px;
+  border-style: inset;
+  border-color: gray;
+  background-color: white;
+  -moz-border-radius: ;
+}
+</style>
+</head>
+
+<script>
+
+function parseExchangeRate(data) {
+    var name = data.query.results.row.name;
+    var rate = parseFloat(data.query.results.row.rate, 10);
+UnitsToUSDPerKg.RMBkg = rate;
+UnitsToUSDPerKg.RMBmt = rate * 0.001;
+  }
+
+$(document).ready(function() {
+var url = "http://query.yahooapis.com/v1/public/yql?q=select%20rate%2Cname%20from%20csv%20where%20url%3D'http%3A%2F%2Fdownload.finance.yahoo.com%2Fd%2Fquotes%3Fs%3DCNYUSD%253DX%26f%3Dl1n'%20and%20columns%3D'rate%2Cname'&format=json&callback=parseExchangeRate&nocache=" + (new Date()).getTime();
+
+   var script = document.createElement('script');
+    script.setAttribute('src', url);
+    document.body.appendChild(script);
+	buildBasketPricesTable();
+});
+</script>
+
+
+<body>
+    <div id="content_div" style="width=200px;height=200px">&nbsp;</div>
+    <script type="text/javascript">
+    aDeposits = [
+            {
+            name : "Mt Weld Central Lanthanide",
+            owner : "Lynas Corporation",
+            production: "4Q 2011",
+            distribution : 0.989,
+            REOFraction : 0.107,
+            totalResourceTonnes : 9880000,
+            recoverableREOFraction : 0.59,
+            composition : {
+                        LaO : 0.255,
+                        CeO : 0.4674,
+                        NdO : 0.185,
+                        PrO : 0.0532,
+                        SmO : 0.0227,
+                        DyO : 0.00124,
+                        EuO : 0.00443,
+                        TbO : 0.00068
+                }
+            },
+            {
+            name : "Mt Weld Duncan",
+            owner : "Lynas Corporation",
+            production: "Unknown",
+            distribution : 0.969,
+            REOFraction : 0.048,
+            totalResourceTonnes : 7620000,
+            recoverableREOFraction : 0.59,
+            composition : {
+                        LaO : 0.2393,
+                        CeO : 0.3942,
+                        NdO : 0.1808,
+                        PrO : 0.0485,
+                        SmO : 0.0287,
+                        DyO : 0.0136,
+                        EuO : 0.0077,
+                        TbO : 0.0029,
+                        YO : 0.0536
+                }
+            },
+            {
+            name : "Mountain Pass",
+            owner: "Molycorp",
+            distribution : 1.0,
+            production: "4Q 2012",
+            REOFraction : 0.092,
+            totalResourceTonnes : 20000000,
+            recoverableREOFraction : (0.5 + 0.6) / 2,
+            composition : {
+                        LaO : 0.332,
+                        CeO : 0.491,
+                        NdO : 0.12,
+                        PrO : 0.0434,
+                        SmO : 0.008,
+                        DyO : 0.0,
+                        EuO : 0.0012,
+                        TbO : 0.0,
+                        GdO : 0.0017,
+                        YO : 0.001
+                }
+            },
+            {
+            name : "Nolans Bore",
+            owner: "Arafura Resources",
+            production: "2H 2013",
+            distribution : 1.0,
+            REOFraction : 0.028,
+            totalResourceTonnes : 30300000,
+            recoverableREOFraction : 0.81,
+            composition : {
+                        LaO : 0.1974,
+                        CeO : 0.4753,
+                        NdO : 0.2120,
+                        PrO : 0.0582,
+                        SmO : 0.0237,
+                        DyO : 0.0033,
+                        EuO : 0.004,
+                        TbO : 0.008,
+                        GdO : 0.01,
+                        YO : 0.0132
+                }
+            },
+            {
+            name : "Baiyun Ebo",
+            owner: "Baotou Steel Group",
+            distribution : 1.0,
+            production: "Now",
+            REOFraction : 0.039,
+            totalResourceTonnes : 1460000000,
+            recoverableREOFraction : (0.25 + 0.5) / 2,
+            composition : {
+                        LaO : 0.271,
+                        CeO : 0.4986,
+                        NdO : 0.154,
+                        PrO : 0.0515,
+                        SmO : 0.015,
+                        DyO : 0.003,
+                        EuO : 0.0019,
+                        TbO : 0.0,
+                        GdO : 0.004,
+                        YO : 0.002
+                }
+            }
+        ];
+
+        REOUSDPerKg = {};//This gets populated
+
+        UnitsToUSDPerKg = {
+                USDkg : 1.0,
+                USDmt : 0.001,
+                RMBkg : 0.15,
+                RMBmt : 0.00015
+        };
+
+        function buildRow(aCellValues) {
+        var sRowHtml = "<tr>"
+        for (var i=0; i<aCellValues.length; i++) {
+        sRowHtml += "<td>" + aCellValues[i] + "</td>";
+        }
+        sRowHtml += "</tr>";
+        return sRowHtml;
+        }
+
+ReoCharts = {
+CeO : "http://www.asianmetal.com/agent/charts.am?priceFlag=8&productInfo=Ce%20Oxide%E3%80%8299%EF%BC%85min%20FOB%20China%E3%80%82USD/MT%E3%80%828",
+DyO : "http://www.asianmetal.com/agent/charts.am?priceFlag=8&productInfo=Dy%20Oxide%E3%80%8299%EF%BC%85min%20FOB%20China%E3%80%82USD/KG%E3%80%828",
+ErO : "http://www.asianmetal.com/agent/charts.am?priceFlag=8&productInfo=Er%20Oxide%E3%80%8299%EF%BC%85min%20FOB%20China%E3%80%82USD/KG%E3%80%828",
+EuO : "http://www.asianmetal.com/agent/charts.am?priceFlag=8&productInfo=Eu%20Oxide%E3%80%8299%EF%BC%85min%20FOB%20China%E3%80%82USD/KG%E3%80%828",
+GdO : "http://www.asianmetal.com/agent/charts.am?priceFlag=8&productInfo=Gd%20Oxide%E3%80%8299%EF%BC%85min%20China%E3%80%82RMB/MT%E3%80%828",
+LaO : "http://www.asianmetal.com/agent/charts.am?priceFlag=8&productInfo=La%20Oxide%E3%80%8299%EF%BC%85min%20FOB%20China%E3%80%82USD/MT%E3%80%828",
+LuO : "http://www.asianmetal.com/agent/charts.am?priceFlag=8&productInfo=Lu%20Oxide%E3%80%8299.9%EF%BC%85min%20China%E3%80%82RMB/KG%E3%80%828",
+NdO : "http://www.asianmetal.com/agent/charts.am?priceFlag=8&productInfo=Nd%20Oxide%E3%80%8299%EF%BC%85min%20FOB%20China%E3%80%82USD/MT%E3%80%828",
+PrO : "http://www.asianmetal.com/agent/charts.am?priceFlag=8&productInfo=Pr%20Oxide%E3%80%8299%EF%BC%85min%20FOB%20China%E3%80%82USD/MT%E3%80%828",
+ScO : "http://www.asianmetal.com/agent/charts.am?priceFlag=8&productInfo=Sc%20Oxide%E3%80%8299.5%EF%BC%85min%20China%E3%80%82RMB/KG%E3%80%828",
+SmO : "http://www.asianmetal.com/agent/charts.am?priceFlag=8&productInfo=Sm%20Oxide%E3%80%8299%EF%BC%85min%20FOB%20China%E3%80%82USD/MT%E3%80%828",
+TbO : "http://www.asianmetal.com/agent/charts.am?priceFlag=8&productInfo=Tb%20Oxide%E3%80%8299.9%EF%BC%85min%20FOB%20China%E3%80%82USD/KG%E3%80%828",
+YO : "http://www.asianmetal.com/agent/charts.am?priceFlag=8&productInfo=Y%20Oxide%E3%80%8299.999%EF%BC%85min%20FOB%20China%E3%80%82USD/KG%E3%80%828",
+YbO : "http://www.asianmetal.com/agent/charts.am?priceFlag=8&productInfo=Yb%20Oxide%E3%80%8299.99%EF%BC%85min%20China%E3%80%82RMB/KG%E3%80%828"
+};
+
+aMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+function formatDate(sDate) {
+var formattedDate = "";
+if (sDate != "") {
+var aDate = sDate.split("-");
+var year = aDate[0];
+year = year.replace(/^\s+|\s+$/g, "");
+year = year.substring(2);
+var sMonth = aDate[1];
+sMonth = sMonth.replace(/^\s+|\s+$/g, "");
+if (sMonth.indexOf("0") == 0) sMonth = sMonth.replace("0", "");
+var month = parseInt(sMonth) - 1;
+var day = aDate[2].replace(/^\s+|\s+$/g, "");
+formattedDate = day + aMonths[month] + year;
+}
+return formattedDate;
+}
+
+function updateUnit(id) {
+var sNewPrice = document.getElementById(id).innerHTML;
+var dNewPrice = parseFloat(sNewPrice);
+
+var elemUnit = document.getElementById(id + "_unit");
+var sUnitDisplay = elemUnit.options[elemUnit.selectedIndex].value;
+var sUnit = sUnitDisplay.replace("/", "");
+var dOldUnitsToUSDPerKg = UnitsToUSDPerKg[aREOPrices[id].unit.replace("/", "")];
+var dNewUnitsToUSDPerKg = UnitsToUSDPerKg[sUnit];
+dNewPrice = dNewPrice * dOldUnitsToUSDPerKg / dNewUnitsToUSDPerKg;     
+
+aREOPrices[id].price = dNewPrice;
+aREOPrices[id].unit = sUnitDisplay;
+
+buildBasketPricesTable();
+}
+
+function updatePrice(id) {
+var sNewPrice = prompt(id + " price:", "0.0");
+if (sNewPrice == null || isNaN(parseFloat(sNewPrice))) return;
+document.getElementById(id).innerHTML = sNewPrice;
+var dNewPrice = parseFloat(sNewPrice);
+
+var elemUnit = document.getElementById(id + "_unit");
+var sUnits = elemUnit.options[elemUnit.selectedIndex].value;
+sUnits = sUnits.replace("/", "");
+
+  if (UnitsToUSDPerKg[sUnits]) {
+	dNewPrice = dNewPrice * UnitsToUSDPerKg[sUnits];
+  }     
+
+aREOPrices[id].price = dNewPrice;
+REOUSDPerKg[id] = dNewPrice;
+
+                  for (var j=0; j<aDeposits.length; j++) {
+                        var deposit = aDeposits[j];
+			aBasketPrices[j] = 0;
+                        for (var k in deposit.composition) {
+				if (REOUSDPerKg[k]) {
+                            		aBasketPrices[j] += REOUSDPerKg[k] * deposit.composition[k] / deposit.distribution;
+				}
+                        }
+                    }
+
+
+buildBasketPricesTable();
+}
+
+function buildREOPricesTable(aValues) {
+var d = new Date();
+var startYear = d.getFullYear();
+var month = d.getMonth() + 1;//Returns month indexed from 0
+//Can go up to four months back, just go back 3 months and use day 1
+var startMonth = month - 3;
+if (startMonth <= 0) {
+startMonth += 12;
+startYear -= 1;
+}
+var sStart = "&startDay=01&startMonth=" + (startMonth < 10 ? "0" : "") + startMonth + "&startYear=" + startYear;
+
+var colspan = 1;
+for (var i in aValues) {
+	colspan++;
+}
+var sTableREOPrices = "<table style='margin:10px'><tr><th class='reo' colspan='" + colspan + "'>" +
+			"<a href='http://www.asianmetal.com/partner/pelemountain.html' target='_blank'>Asian Metal REO Prices</a>&nbsp;&nbsp;" +
+			"<a href='http://www.lynascorp.com/page.asp?category_id=1&page_id=25' target='_blank'>Lynas REO Prices</a>&nbsp;&nbsp;" +
+			"<a href='http://www.metal-pages.com/metalprices/rareearths/' target='_blank'>Metal Pages REO Prices</a>&nbsp;&nbsp;" +
+			"</th></tr>";
+
+sTableREOPrices += "<tr><th class='reo'>&nbsp;</th>";
+for (var i in aValues) {   
+        var sReo = i
+        var sUrl = ReoCharts[sReo];
+        sUrl = sUrl + sStart;
+        sTableREOPrices += "<th class='reo'><a href='" + sUrl + "' target='_blank'>" + sReo + "</a></th>";
+}
+sTableREOPrices += "</tr>";
+sTableREOPrices += "<tr><th>Unit</th>";
+
+for (var i in aValues) { 
+	var sUnit = aValues[i].unit;
+        sTableREOPrices += "<td>" + "<select id='" + i + "_unit' onchange='updateUnit(\"" + i + "\")'>" +
+	"<option " + ((sUnit == "USD/kg") ? "selected" : "") + " value='USD/kg'>USD/kg</option>" + 
+	"<option " + ((sUnit == "USD/mt") ? "selected" : "") + " value='USD/mt'>USD/mt</option>" + 
+	"<option " + ((sUnit == "RMB/kg") ? "selected" : "") + " value='RMB/kg'>RMB/kg</option>" + 
+	"<option " + ((sUnit == "RMB/mt") ? "selected" : "") + " value='RMB/mt'>RMB/mt</option>" + 
+	"</select>" + "</td>";
+}
+sTableREOPrices += "</tr>";
+sTableREOPrices += "<tr><th>Price (click to change)</th>";
+for (var i in aValues) { 
+        sTableREOPrices += "<td id='" + i + "' onclick='updatePrice(\"" + i + "\")'>" + aValues[i].price + "</td>";
+}
+sTableREOPrices += "</tr>";
+
+for (var i=0; i<aDeposits.length; i++) {
+var deposit = aDeposits[i];
+sTableREOPrices += "<tr><th style='white-space:nowrap'>" + deposit.name + "</th>";
+for (var j in aValues) { 
+        var sREO = j;
+        var dREOComp = (deposit.composition[sREO] ? 100 * deposit.composition[sREO] : 0.00);
+        var nDP = 1;
+        if (dREOComp >= 1) nDP = 2;
+        else if (dREOComp > 0) nDP = 3;
+        else nDP = 1;
+        sTableREOPrices += "<td>" + dREOComp.toFixed(nDP) + "%</td>";
+}
+sTableREOPrices += "</tr>";
+
+//Basket value per REO
+sTableREOPrices += "<tr><td style='white-space:nowrap'>Basket Price US$/kg</td>";
+for (var j in aValues) { 
+        var sREO = j;
+        var dREOPrice = 0.0;     
+        if (REOUSDPerKg[sREO] && deposit.composition[sREO]) {
+        dREOPrice = REOUSDPerKg[sREO] * deposit.composition[sREO] / deposit.distribution;
+        }
+        sTableREOPrices += "<td>" + dREOPrice.toFixed(2) + "</td>";
+}
+sTableREOPrices += "</tr>";
+}
+sTableREOPrices += "</table>";
+return sTableREOPrices;
+}
+ 
+var aREOPrices = {
+CeO : {unit : "USD/kg",price : 0.0},
+DyO : {unit : "USD/kg",price : 0.0},
+ErO : {unit : "USD/kg",price : 0.0},
+EuO : {unit : "USD/kg",price : 0.0},
+GdO : {unit : "USD/kg",price : 0.0},
+LaO : {unit : "USD/kg",price : 0.0},
+LuO : {unit : "USD/kg",price : 0.0},
+NdO : {unit : "USD/kg",price : 0.0},
+PrO : {unit : "USD/kg",price : 0.0},
+ScO : {unit : "USD/kg",price : 0.0},
+SmO : {unit : "USD/kg",price : 0.0},
+TbO : {unit : "USD/kg",price : 0.0},
+YO : {unit : "USD/kg",price : 0.0},
+YbO : {unit : "USD/kg",price : 0.0}
+};
+  
+var aBasketPrices = [];
+
+
+        for (var i=0; i< aDeposits.length; i++) {
+            aBasketPrices.push(0);
+        }
+ 
+      function buildBasketPricesTable() {  
+       
+        var divContent = document.getElementById('content_div');
+        var sTableHtml =
+        "<table style='margin:10px'>" +
+        "<tr><th colspan='9'>Basket Prices Etc</th></tr>" + 
+        "<tr>" + 
+        "<th>Deposit</th>" +
+        "<th>Owner</th>" + 
+        "<th>Basket Price US$/kg</th>" +
+        "<th>Reserve Mt</th>" +
+        "<th>REO %</th>" +
+        "<th>Recoverable REO %</th>" +
+        "<th>Total Recoverable (US$ Billions)</th>" +
+        "<th>US$ Per Tonne Mined</th>" +
+        "</tr>";
+
+        for (var j=0; j<aBasketPrices.length; j++) {
+            var aValues = new Array();
+              
+            aValues.push(aDeposits[j].name);
+            aValues.push(aDeposits[j].owner);
+            aValues.push("" + aBasketPrices[j].toFixed(2));
+            aValues.push("" + (aDeposits[j].totalResourceTonnes / 1000000).toFixed(2));
+            aValues.push("" + (aDeposits[j].REOFraction * 100).toFixed(2));
+            aValues.push("" + (aDeposits[j].recoverableREOFraction * 100).toFixed(2));
+                            
+            var dUSDPerTonneMined = 1000 * aBasketPrices[j] * aDeposits[j].REOFraction;
+            var dTotalRecoverableUSD = dUSDPerTonneMined * aDeposits[j].totalResourceTonnes * aDeposits[j].recoverableREOFraction;
+            
+            aValues.push("" + (dTotalRecoverableUSD / 1000000000).toFixed(2));
+            aValues.push("" + dUSDPerTonneMined.toFixed(0)); 
+            sTableHtml += buildRow(aValues);                 
+        }
+
+        sTableHtml += "</table>";
+        var sRMBToUSDNote = "<div style='font-size:12pt;font-family:Arial;margin:10px;width:800px'>Calculations performed using RMB to USD exchange rate of " + UnitsToUSDPerKg.RMBkg + " sourced from " + 
+        "<a href='http://download.finance.yahoo.com/d/quotes.csv?f=l1&e=.csv&s=cnyusd=x' target='_blank'>yahoo finance</a></div>";
+
+        divContent.innerHTML = buildREOPricesTable(aREOPrices) + sTableHtml + sRMBToUSDNote;      
+      };
+   
+ 
+    </script>
+</body>
+</html>
