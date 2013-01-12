@@ -236,7 +236,7 @@ buildBasketPricesTable();
 }
 
 function updatePrice(id) {
-var sNewPrice = prompt(id + " price:", "0.0");
+var sNewPrice = prompt(id + " price:", aREOPrices[id].price);
 if (sNewPrice == null || isNaN(parseFloat(sNewPrice))) return;
 document.getElementById(id).innerHTML = sNewPrice;
 var dNewPrice = parseFloat(sNewPrice);
