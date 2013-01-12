@@ -43,6 +43,7 @@ function parseExchangeRate(data) {
     var rate = parseFloat(data.query.results.row.rate, 10);
 UnitsToUSDPerKg.RMBkg = rate;
 UnitsToUSDPerKg.RMBmt = rate * 0.001;
+	buildBasketPricesTable();
   }
 
 $(document).ready(function() {
@@ -51,7 +52,7 @@ var url = "http://query.yahooapis.com/v1/public/yql?q=select%20rate%2Cname%20fro
    var script = document.createElement('script');
     script.setAttribute('src', url);
     document.body.appendChild(script);
-	buildBasketPricesTable();
+
 });
 </script>
 
