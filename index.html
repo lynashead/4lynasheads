@@ -66,18 +66,24 @@ var url = "http://query.yahooapis.com/v1/public/yql?q=select%20rate%2Cname%20fro
             owner : "Lynas Corporation",
             production: "4Q 2011",
             distribution : 0.989,
-            REOFraction : 0.107,
-            totalResourceTonnes : 9880000,
+            REOFraction : 0.098,
+            totalResourceTonnes : 14949000,
             recoverableREOFraction : 0.59,
             composition : {
-                        LaO : 0.255,
-                        CeO : 0.4674,
-                        NdO : 0.185,
-                        PrO : 0.0532,
-                        SmO : 0.0227,
-                        DyO : 0.00124,
-                        EuO : 0.00443,
-                        TbO : 0.00068
+                        LaO : 0.2388,
+                        CeO : 0.4755,
+                        NdO : 0.1813,
+                        PrO : 0.0516,
+                        SmO : 0.0244,
+                        DyO : 0.0025,
+                        EuO : 0.0053,
+                        TbO : 0.0009,
+			GdO : 0.0109,
+			HoO : 0.0003,
+			ErO : 0.0006,
+			TmO : 0.0001,
+			YbO : 0.0003,
+			YO : 0.0076
                 }
             },
             {
@@ -86,18 +92,24 @@ var url = "http://query.yahooapis.com/v1/public/yql?q=select%20rate%2Cname%20fro
             production: "Unknown",
             distribution : 0.969,
             REOFraction : 0.048,
-            totalResourceTonnes : 7620000,
+            totalResourceTonnes : 8992000,
             recoverableREOFraction : 0.59,
             composition : {
-                        LaO : 0.2393,
-                        CeO : 0.3942,
-                        NdO : 0.1808,
-                        PrO : 0.0485,
-                        SmO : 0.0287,
-                        DyO : 0.0136,
+                        LaO : 0.2487,
+                        CeO : 0.3938,
+                        NdO : 0.1789,
+                        PrO : 0.0475,
+                        SmO : 0.0283,
+                        DyO : 0.0127,
                         EuO : 0.0077,
-                        TbO : 0.0029,
-                        YO : 0.0536
+			GdO : 0.0199,
+                        TbO : 0.0026,
+			HoO : 0.0019,
+			ErO : 0.0041,
+			TmO : 0.0004,
+			YbO : 0.0018,
+			LuO : 0.0002,
+                        YO : 0.0517
                 }
             },
             {
@@ -242,14 +254,16 @@ document.getElementById(id).innerHTML = sNewPrice;
 var dNewPrice = parseFloat(sNewPrice);
 
 var elemUnit = document.getElementById(id + "_unit");
-var sUnits = elemUnit.options[elemUnit.selectedIndex].value;
-sUnits = sUnits.replace("/", "");
-
-  if (UnitsToUSDPerKg[sUnits]) {
-	dNewPrice = dNewPrice * UnitsToUSDPerKg[sUnits];
-  }     
+var sUnitDisplay = elemUnit.options[elemUnit.selectedIndex].value;
+var sUnit = sUnitDisplay.replace("/", "");
 
 aREOPrices[id].price = dNewPrice;
+aREOPrices[id].unit = sUnitDisplay;
+
+  if (UnitsToUSDPerKg[sUnit]) {
+	dNewPrice = dNewPrice * UnitsToUSDPerKg[sUnit];
+  }     
+
 REOUSDPerKg[id] = dNewPrice;
 
                   for (var j=0; j<aDeposits.length; j++) {
@@ -284,8 +298,9 @@ for (var i in aValues) {
 }
 var sTableREOPrices = "<table style='margin:10px'><tr><th class='reo' colspan='" + colspan + "'>" +
 			"<a href='http://www.asianmetal.com/partner/pelemountain.html' target='_blank'>Asian Metal REO Prices</a>&nbsp;&nbsp;" +
-			"<a href='http://www.lynascorp.com/page.asp?category_id=1&page_id=25' target='_blank'>Lynas REO Prices</a>&nbsp;&nbsp;" +
 			"<a href='http://www.metal-pages.com/metalprices/rareearths/' target='_blank'>Metal Pages REO Prices</a>&nbsp;&nbsp;" +
+			"<a href='http://www.lynascorp.com/page.asp?category_id=1&page_id=25' target='_blank'>Lynas REO Prices</a>&nbsp;&nbsp;" +
+			"<a href='http://www.lynascorp.com/page.asp?category_id=1&page_id=4' target='_blank'>Lynas Resource Estimates</a>&nbsp;&nbsp;" +
 			"</th></tr>";
 
 sTableREOPrices += "<tr><th class='reo'>&nbsp;</th>";
@@ -350,12 +365,14 @@ DyO : {unit : "USD/kg",price : 0.0},
 ErO : {unit : "USD/kg",price : 0.0},
 EuO : {unit : "USD/kg",price : 0.0},
 GdO : {unit : "USD/kg",price : 0.0},
+HoO : {unit : "USD/kg",price : 0.0},
 LaO : {unit : "USD/kg",price : 0.0},
 LuO : {unit : "USD/kg",price : 0.0},
 NdO : {unit : "USD/kg",price : 0.0},
 PrO : {unit : "USD/kg",price : 0.0},
 ScO : {unit : "USD/kg",price : 0.0},
 SmO : {unit : "USD/kg",price : 0.0},
+TmO : {unit : "USD/kg",price : 0.0}, 
 TbO : {unit : "USD/kg",price : 0.0},
 YO : {unit : "USD/kg",price : 0.0},
 YbO : {unit : "USD/kg",price : 0.0}
